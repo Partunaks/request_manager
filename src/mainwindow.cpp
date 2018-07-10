@@ -11,12 +11,15 @@ MainWindow::MainWindow(QWidget *parent) :
     db.setDatabaseName("requests.sqlite");
     db.open();
     connect(ui->add_b,SIGNAL(clicked(bool)),this,SLOT(AddData()));
-    connect(ui->get_b,SIGNAL(clicked(bool)),this,SLOT(GetData()));
+    //connect(ui->get_b,SIGNAL(clicked(bool)),this,SLOT(GetData()));
     model = new QSqlTableModel(this,db);
     QPixmap pixmap("renault.png");
-    QPicture picture("renault.png");
+
+   //QPicture picture("renault.png");
     ui->picture_l->setPixmap(pixmap);
-    ui->picture_l->setPicture(picture);
+    //ui->picture_l->resize(pixmap.size());
+    //ui->picture_l->setPicture(picture);
+    MainWindow::GetData();
 }
 
 MainWindow::~MainWindow()
@@ -50,7 +53,22 @@ void MainWindow::AddData()
     query.bindValue(3,status);
     bool qur = false;
     qur= query.exec();
+    QMessageBox msgbx;
+    if(qur == true)
+    {
+    msgbx.setText("Request succesfully added!");
+    msgbx.exec();
+    }
+    else
+    {
+        msgbx.setText("Cant added request!");
+        msgbx.exec();
+    }
     qDebug()<<qur<<query.lastError()<<"\n"<<query.lastQuery();
+    ui->requester_l->setText("");
+    ui->ipn_l->setText("");
+    ui->description_t->setText("");
+    MainWindow::GetData();
 
 }
 
@@ -65,3 +83,4 @@ void MainWindow::GetData()
         ui->table_v->resizeRowsToContents();
 
 }
+

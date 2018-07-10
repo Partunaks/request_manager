@@ -7,6 +7,7 @@
 #include<QtSql/QSqlError>
 #include<QStandardItemModel>
 #include<QStandardItem>
+#include<QMessageBox>
 namespace Ui {
 class MainWindow;
 }
@@ -32,6 +33,8 @@ private:
 public slots:
     void AddData();
     void GetData();
+private slots:
+    void on_clear_b_clicked();
 };
 
 #endif // MAINWINDOW_H
