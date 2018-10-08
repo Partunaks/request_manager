@@ -8,6 +8,8 @@
 #include<QStandardItemModel>
 #include<QStandardItem>
 #include<QMessageBox>
+#include<QXmlStreamReader>
+#include<QFile>
 namespace Ui {
 class MainWindow;
 }
@@ -33,6 +35,7 @@ private:
 public slots:
     void AddData();
     void GetData();
+    void Enter();
 private slots:
     void on_clear_b_clicked();
 };

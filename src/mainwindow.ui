@@ -20,6 +20,18 @@
    <string>Request manager</string>
   </property>
   <widget class="QWidget" name="centralWidget">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>319</width>
+     <height>266</height>
+    </size>
+   </property>
    <widget class="QTabWidget" name="tabWidget">
     <property name="geometry">
      <rect>
@@ -29,8 +41,23 @@
       <height>561</height>
      </rect>
     </property>
+    <property name="maximumSize">
+     <size>
+      <width>861</width>
+      <height>561</height>
+     </size>
+    </property>
+    <property name="focusPolicy">
+     <enum>Qt::TabFocus</enum>
+    </property>
+    <property name="layoutDirection">
+     <enum>Qt::LeftToRight</enum>
+    </property>
     <property name="currentIndex">
      <number>0</number>
+    </property>
+    <property name="tabBarAutoHide">
+     <bool>true</bool>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -41,7 +68,7 @@
        <rect>
         <x>300</x>
         <y>40</y>
-        <width>261</width>
+        <width>161</width>
         <height>141</height>
        </rect>
       </property>
@@ -49,7 +76,7 @@
      <widget class="QLabel" name="label">
       <property name="geometry">
        <rect>
-        <x>590</x>
+        <x>500</x>
         <y>10</y>
         <width>47</width>
         <height>13</height>
@@ -110,9 +137,15 @@
        <rect>
         <x>0</x>
         <y>220</y>
-        <width>841</width>
-        <height>281</height>
+        <width>851</width>
+        <height>301</height>
        </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
       </property>
      </widget>
      <widget class="QLabel" name="requester">
@@ -128,24 +161,11 @@
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Requester&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
      </widget>
-     <widget class="QLabel" name="picture_l">
-      <property name="geometry">
-       <rect>
-        <x>750</x>
-        <y>0</y>
-        <width>101</width>
-        <height>101</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>TextLabel</string>
-      </property>
-     </widget>
      <widget class="QCheckBox" name="status_box">
       <property name="geometry">
        <rect>
-        <x>590</x>
-        <y>40</y>
+        <x>500</x>
+        <y>50</y>
         <width>70</width>
         <height>17</height>
        </rect>
@@ -167,25 +187,22 @@
        <string>Description</string>
       </property>
      </widget>
-    </widget>
-    <widget class="QWidget" name="tab_2">
-     <attribute name="title">
-      <string>Edit</string>
-     </attribute>
-     <widget class="QLabel" name="requester_2">
+     <widget class="QCalendarWidget" name="calendarWidget">
       <property name="geometry">
        <rect>
-        <x>20</x>
-        <y>20</y>
-        <width>121</width>
-        <height>20</height>
+        <x>620</x>
+        <y>0</y>
+        <width>231</width>
+        <height>211</height>
        </rect>
       </property>
-      <property name="text">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Requester&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-      </property>
      </widget>
-     <widget class="QLineEdit" name="ipn_l_2">
+    </widget>
+    <widget class="QWidget" name="auth_tab">
+     <attribute name="title">
+      <string>Authorization</string>
+     </attribute>
+     <widget class="QLineEdit" name="pass_t">
       <property name="geometry">
        <rect>
         <x>170</x>
@@ -194,8 +211,23 @@
         <height>20</height>
        </rect>
       </property>
+      <property name="autoFillBackground">
+       <bool>false</bool>
+      </property>
+      <property name="locale">
+       <locale language="English" country="UnitedStates"/>
+      </property>
+      <property name="text">
+       <string comment="password" extracomment="password"/>
+      </property>
+      <property name="echoMode">
+       <enum>QLineEdit::Password</enum>
+      </property>
+      <property name="placeholderText">
+       <string/>
+      </property>
      </widget>
-     <widget class="QLineEdit" name="requester_l_2">
+     <widget class="QLineEdit" name="ipn_t">
       <property name="geometry">
        <rect>
         <x>20</x>
@@ -204,31 +236,47 @@
         <height>20</height>
        </rect>
       </property>
-     </widget>
-     <widget class="QLabel" name="picture_l_2">
-      <property name="geometry">
-       <rect>
-        <x>750</x>
-        <y>0</y>
-        <width>101</width>
-        <height>101</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>TextLabel</string>
+      <property name="locale">
+       <locale language="English" country="UnitedStates"/>
       </property>
      </widget>
-     <widget class="QLabel" name="label_6">
+     <widget class="QLabel" name="label_4">
       <property name="geometry">
        <rect>
-        <x>180</x>
-        <y>20</y>
-        <width>47</width>
-        <height>13</height>
+        <x>20</x>
+        <y>30</y>
+        <width>62</width>
+        <height>20</height>
        </rect>
       </property>
       <property name="text">
        <string>IPN</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_5">
+      <property name="geometry">
+       <rect>
+        <x>170</x>
+        <y>30</y>
+        <width>91</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>PASSWORD</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="enter_button">
+      <property name="geometry">
+       <rect>
+        <x>60</x>
+        <y>180</y>
+        <width>83</width>
+        <height>28</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Enter</string>
       </property>
      </widget>
     </widget>
