@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include<string.h>
+#include<config.h>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -10,36 +11,11 @@ MainWindow::MainWindow(QWidget *parent) :
     QString driver;
     //Setup UI
     ui->setupUi(this);
-    ui->tabWidget->setCurrentIndex(1);
-    ui->tab->setEnabled(false);
-
-    //Read config from XML
-    QFile file("config.xml");
-    file.open(QIODevice::ReadOnly);
-    QXmlStreamReader xmlReader;
-    xmlReader.setDevice(&file);
-    while(!xmlReader.atEnd() && !xmlReader.hasError())
-    {
-        QXmlStreamReader::TokenType token = xmlReader.readNext();
-        if(token == QXmlStreamReader::StartDocument)
-        {
-            continue;
-        }
-        if(token == QXmlStreamReader::StartElement)
-        {
-            if(xmlReader.name() == "database")
-            {
-                continue;
-            }
-            if(xmlReader.name() == "host")
-            {
-
-            }
-
-        }
-
-       }
-
+    ui->widget->setStyleSheet("background-color: #fff677");
+    ui->ipn_t->setStyleSheet("background-color: white");
+    ui->pass_t->setStyleSheet("background-color: white");
+    ui->tabWidget->setEnabled(false);
+    read_conf(host,driver);
     //Setup database settings
     qDebug()<<driver;
     qDebug()<<host;
@@ -116,7 +92,6 @@ void MainWindow::GetData()
         model->setTable("request");
         model->setEditStrategy(QSqlTableModel::OnManualSubmit);
         model->select();
-        //model->removeColumn(3);
         ui->table_v->setModel(model);
         ui->table_v->resizeColumnsToContents();
         ui->table_v->resizeRowsToContents();
@@ -133,12 +108,11 @@ void MainWindow::Enter()
     if(db.open() == true)
     {
     MainWindow::GetData();
-    ui->tabWidget->setCurrentIndex(0);
-    ui->tab->setEnabled(true);
-    ui->centralWidget->resize(851,561);
-    ui->auth_tab->setEnabled(false);
+    ui->widget->hide();
+    ui->tabWidget->setEnabled(true);
     }
     else {
+
 
        QMessageBox::critical(nullptr,"Error", "Access denied!");
     }

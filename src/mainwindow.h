@@ -36,8 +36,9 @@ public slots:
     void AddData();
     void GetData();
     void Enter();
+    //void read_conf(QString host,QString driver);
 private slots:
-    void on_clear_b_clicked();
+
 };
 
 #endif // MAINWINDOW_H
