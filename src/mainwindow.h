@@ -19,12 +19,13 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = 0);
+    explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
 private:
     Ui::MainWindow *ui;
     QSqlDatabase db;
+    QSqlDatabase db_store;
     //QStandardItemModel *model;
     QStandardItem *item;
     QStringList horizontalHeader;
@@ -32,10 +33,12 @@ private:
     quint16 row=0;
     quint16 col=0;
     QSqlTableModel *model;
+    QSqlTableModel *model_store;
 public slots:
     void AddData();
     void GetData();
     void Enter();
+    void Refresh_store();
     //void read_conf(QString host,QString driver);
 private slots:
 
