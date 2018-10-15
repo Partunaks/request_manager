@@ -14,26 +14,25 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->widget->setStyleSheet("background-color: #fff677");
     ui->ipn_t->setStyleSheet("background-color: white");
     ui->pass_t->setStyleSheet("background-color: white");
+    ui->tabWidget->setCurrentIndex(0);
     ui->tabWidget->setEnabled(false);
+
+    //reading configuration
     read_conf(host,driver);
+
     //Setup database settings
     qDebug()<<driver;
     qDebug()<<host;
     //USER DB
     db=QSqlDatabase::addDatabase("QPSQL");
     db.setHostName("127.0.0.1");
-    //STORE DB
-    db_store = QSqlDatabase::addDatabase("QPSQL");
-    db_store.setHostName("127.0.0.1");
-    db_store.setUserName("postgres");
-    db_store.setPassword("ssdklooppeople09");
     //Create connection of SIGNALS and SLOTS
     connect(ui->add_b,SIGNAL(clicked(bool)),this,SLOT(AddData()));
     connect(ui->enter_button,SIGNAL(clicked(bool)),this,SLOT(Enter()));
 
     //Create sqltableModel to show data from DB
     model = new QSqlTableModel(this,db);
-    model_store = new QSqlTableModel(this,db_store);
+    model_store = new QSqlTableModel(this,db);
 
 }
 
@@ -89,20 +88,19 @@ void MainWindow::AddData()
     ui->requester_l->setText("");
     ui->ipn_l->setText("");
     ui->description_t->setText("");
-    db.close();
     MainWindow::GetData();
 
 }
 
 void MainWindow::GetData()
-{       db.open();
+{
         model->setTable("request");
         model->setEditStrategy(QSqlTableModel::OnManualSubmit);
         model->select();
         ui->table_v->setModel(model);
         ui->table_v->resizeColumnsToContents();
         ui->table_v->resizeRowsToContents();
-        db.close();
+
 
 
 
@@ -110,9 +108,19 @@ void MainWindow::GetData()
 
 void MainWindow::Refresh_store()
 {
+    db.close();
+    db.setDatabaseName("store");
+    db.open();
     model_store->setTable("computers");
     model_store->setEditStrategy(QSqlTableModel::OnManualSubmit);
-    ui->tv_stor
+    model_store->select();
+    ui->tv_store->setModel(model_store);
+    model_store->removeColumn(0);
+    //ui->tv_store->resizeColumnsToContents();
+    ui->tv_store->resizeRowsToContents();
+    ui->tv_store->setColumnWidth(1,150);
+    ui->tv_store->setColumnWidth(2,150);
+    db.setDatabaseName(ui->ipn_t->text());
 
 }
 
@@ -134,7 +142,8 @@ void MainWindow::Enter()
 
        QMessageBox::critical(nullptr,"Error", "Access denied!");
     }
-    ui->ipn_t->setText("");
+
     ui->pass_t->setText("");
+    Refresh_store();
 }
 

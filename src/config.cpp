@@ -4,7 +4,7 @@
 
 void read_conf(QString &host,QString &driver)
 {
-    QFile file("conf.conf");
+    QFile file("conf.xml");
     if (file.open(QIODevice::ReadOnly))
       {
         size_t linenum = 1;

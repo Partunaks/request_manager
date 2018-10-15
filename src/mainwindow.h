@@ -25,7 +25,6 @@ public:
 private:
     Ui::MainWindow *ui;
     QSqlDatabase db;
-    QSqlDatabase db_store;
     //QStandardItemModel *model;
     QStandardItem *item;
     QStringList horizontalHeader;
