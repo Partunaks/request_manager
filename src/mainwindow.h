@@ -38,6 +38,8 @@ public slots:
     void GetData();
     void Enter();
     void Refresh_store();
+    void Given();
+    void Imaged();
     //void read_conf(QString host,QString driver);
 private slots:
 

@@ -11,9 +11,17 @@ MainWindow::MainWindow(QWidget *parent) :
     QString driver;
     //Setup UI
     ui->setupUi(this);
+    QStringList categories = { "Network", "Hardware", "Software","Telephony" };
+    QStringList types = {"spot_laptop","spot_desktop","swing_laptop","swing_desktop","ultra_laptop"};
+    ui->comboBox->addItems(categories);
+    ui->cb_type->addItems(types);
+    ui->table_v->setEditTriggers(QTableView::NoEditTriggers);
+    //Set auth window design
     ui->widget->setStyleSheet("background-color: #fff677");
     ui->ipn_t->setStyleSheet("background-color: white");
     ui->pass_t->setStyleSheet("background-color: white");
+
+
     ui->tabWidget->setCurrentIndex(0);
     ui->tabWidget->setEnabled(false);
 
@@ -26,9 +34,12 @@ MainWindow::MainWindow(QWidget *parent) :
     //USER DB
     db=QSqlDatabase::addDatabase("QPSQL");
     db.setHostName("127.0.0.1");
+
     //Create connection of SIGNALS and SLOTS
     connect(ui->add_b,SIGNAL(clicked(bool)),this,SLOT(AddData()));
     connect(ui->enter_button,SIGNAL(clicked(bool)),this,SLOT(Enter()));
+    connect(ui->bGiven,SIGNAL(clicked(bool)),this,SLOT(Given()));
+    connect(ui->bImaged,SIGNAL(clicked(bool)),this,SLOT(Imaged()));
 
     //Create sqltableModel to show data from DB
     model = new QSqlTableModel(this,db);
@@ -51,6 +62,7 @@ void MainWindow::AddData()
     QString description = ui->description_t->toPlainText();
     QString status;
     QDate date = ui->calendarWidget->selectedDate();
+    QString category = ui->comboBox->currentText();
 
     if(ui->status_box->isChecked())
     {
@@ -63,13 +75,14 @@ void MainWindow::AddData()
 
 
     QSqlQuery query;
-    query.prepare("INSERT INTO request (name,ipn,description,status,date)"
-                  "VALUES (?,?,?,?,?)");
+    query.prepare("INSERT INTO request (name,ipn,description,status,date,category)"
+                  "VALUES (?,?,?,?,?,?)");
     query.bindValue(0,requester);
     query.bindValue(1,IPN);
     query.bindValue(2,description);
     query.bindValue(3,status);
     query.bindValue(4,date);
+    query.bindValue(5,category);
     bool qur = false;
     qur= query.exec();
     QMessageBox msgbx;
@@ -91,7 +104,16 @@ void MainWindow::AddData()
     MainWindow::GetData();
 
 }
+void MainWindow::Given()
+{
 
+
+   /* db.setDatabaseName("store");
+    QSqlQuery query;
+    query.prepare("UPDATE computers )"
+                  "VALUES (?,?,?,?,?,?)");*/
+
+}
 void MainWindow::GetData()
 {
         model->setTable("request");
@@ -100,6 +122,7 @@ void MainWindow::GetData()
         ui->table_v->setModel(model);
         ui->table_v->resizeColumnsToContents();
         ui->table_v->resizeRowsToContents();
+        ui->table_v->setWordWrap(true);
 
 
 
