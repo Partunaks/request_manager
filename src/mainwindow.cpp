@@ -40,7 +40,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->add_b,SIGNAL(clicked(bool)),this,SLOT(AddData()));
     connect(ui->enter_button,SIGNAL(clicked(bool)),this,SLOT(Enter()));
     connect(ui->bGiven,SIGNAL(clicked(bool)),this,SLOT(Given()));
-    connect(ui->bImaged,SIGNAL(clicked(bool)),this,SLOT(Imaged()));
+connect(ui->bImaged,SIGNAL(clicked(bool)),this,SLOT(Imaged()));
 
     //Create sqltableModel to show data from DB
     model = new QSqlTableModel(this,db);
@@ -64,16 +64,6 @@ void MainWindow::AddData()
     QString status;
     QDate date = ui->calendarWidget->selectedDate();
     QString category = ui->comboBox->currentText();
-
-    if(ui->status_box->isChecked())
-    {
-        status = "Done!";
-    }
-    else
-    {
-        status="In progress!";
-    }
-
 
     QSqlQuery query;
     query.prepare("INSERT INTO request (name,ipn,description,date,category)"
@@ -108,12 +98,34 @@ void MainWindow::Given()
 {
 
     QString type = ui->cb_type->currentText();
-   db.setDatabaseName("store");
+    int eq_count = ui->le_count_eq->text().toInt() ;
+    db.setDatabaseName("store");
     QSqlQuery query;
+    for(int i=0;i<eq_count;i++)
+    {
     query.exec("UPDATE computers SET count = count - 1 WHERE type=" "'"+type+"'") ;
-
+    }
     qDebug()<<query.lastError()<<query.lastQuery();
     db.setDatabaseName(ui->ipn_t->text());
+    MainWindow::Refresh_store();
+
+
+}
+
+void MainWindow::Imaged()
+{
+
+    QString type = ui->cb_type->currentText();
+    int eq_count = ui->le_count_eq->text().toInt() ;
+    db.setDatabaseName("store");
+    QSqlQuery query;
+    for(int i=0;i<eq_count;i++)
+    {
+    query.exec("UPDATE computers SET count = count + 1 WHERE type=" "'"+type+"'");
+    }
+    qDebug()<<query.lastError()<<query.lastQuery();
+    db.setDatabaseName(ui->ipn_t->text());
+    MainWindow::Refresh_store();
 
 
 }
