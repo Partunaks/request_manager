@@ -16,6 +16,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->comboBox->addItems(categories);
     ui->cb_type->addItems(types);
     ui->table_v->setEditTriggers(QTableView::NoEditTriggers);
+    ui->tv_store->setEditTriggers(QTableView::NoEditTriggers);
     //Set auth window design
     ui->widget->setStyleSheet("background-color: #fff677");
     ui->ipn_t->setStyleSheet("background-color: white");
@@ -75,14 +76,13 @@ void MainWindow::AddData()
 
 
     QSqlQuery query;
-    query.prepare("INSERT INTO request (name,ipn,description,status,date,category)"
-                  "VALUES (?,?,?,?,?,?)");
+    query.prepare("INSERT INTO request (name,ipn,description,date,category)"
+                  "VALUES (?,?,?,?,?)");
     query.bindValue(0,requester);
     query.bindValue(1,IPN);
     query.bindValue(2,description);
-    query.bindValue(3,status);
-    query.bindValue(4,date);
-    query.bindValue(5,category);
+    query.bindValue(3,date);
+    query.bindValue(4,category);
     bool qur = false;
     qur= query.exec();
     QMessageBox msgbx;
@@ -107,11 +107,14 @@ void MainWindow::AddData()
 void MainWindow::Given()
 {
 
-
-   /* db.setDatabaseName("store");
+    QString type = ui->cb_type->currentText();
+   db.setDatabaseName("store");
     QSqlQuery query;
-    query.prepare("UPDATE computers )"
-                  "VALUES (?,?,?,?,?,?)");*/
+    query.exec("UPDATE computers SET count = count - 1 WHERE type=" "'"+type+"'") ;
+
+    qDebug()<<query.lastError()<<query.lastQuery();
+    db.setDatabaseName(ui->ipn_t->text());
+
 
 }
 void MainWindow::GetData()
@@ -123,10 +126,6 @@ void MainWindow::GetData()
         ui->table_v->resizeColumnsToContents();
         ui->table_v->resizeRowsToContents();
         ui->table_v->setWordWrap(true);
-
-
-
-
 }
 
 void MainWindow::Refresh_store()
@@ -138,7 +137,6 @@ void MainWindow::Refresh_store()
     model_store->setEditStrategy(QSqlTableModel::OnManualSubmit);
     model_store->select();
     ui->tv_store->setModel(model_store);
-    model_store->removeColumn(0);
     //ui->tv_store->resizeColumnsToContents();
     ui->tv_store->resizeRowsToContents();
     ui->tv_store->setColumnWidth(1,150);
