@@ -1,37 +1,23 @@
 //#include<mainwindow.h>
 #include<config.h>
 
-
-void read_conf(QString &host,QString &driver)
+/*void xmlparser(QString &host,QString &driver)
 {
-    QFile file("conf.xml");
-    if (file.open(QIODevice::ReadOnly))
-      {
-        size_t linenum = 1;
+    QFile* file = new QFile("conf.xml");
+    file->open(QIODevice::ReadOnly | QIODevice::Text);
+    QXmlStreamReader xml(file);
 
-        QTextStream s(&file);
-        QString line;
+    while (!xml.atEnd() && !xml.hasError())
+    {
 
-        while(!file.atEnd())
-        {
-            line = s.readLine();
-            if(line.at(0) == "#")
-            {
-                continue;
-            }
-            if(linenum == 2)
-            {
-                host = line;
-            }
-            else if(linenum == 4)
-            {
-                driver = line;
-            }
-            linenum++;
-            qDebug()<<line;
-        }
-        file.close();
-      }
+        qDebug()<<xml.name();
+    }
+}*/
+void Settings(QString &host,QString &driver)
+{
+    QSettings *settings = new QSettings("settings.conf",QSettings::NativeFormat);
+    host=settings->value("database/host").toString();
+    driver=settings->value("database/driver").toString();
+
 
 }
-

@@ -11,6 +11,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QString driver;
     //Setup UI
     ui->setupUi(this);
+    Settings(host,driver);
     QStringList categories = { "Network", "Hardware", "Software","Telephony" };
     QStringList types = {"spot_laptop","spot_desktop","swing_laptop","swing_desktop","ultra_laptop"};
     ui->comboBox->addItems(categories);
@@ -21,26 +22,23 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->widget->setStyleSheet("background-color: #fff677");
     ui->ipn_t->setStyleSheet("background-color: white");
     ui->pass_t->setStyleSheet("background-color: white");
-
-
     ui->tabWidget->setCurrentIndex(0);
     ui->tabWidget->setEnabled(false);
 
-    //reading configuration
-    read_conf(host,driver);
 
     //Setup database settings
     qDebug()<<driver;
     qDebug()<<host;
     //USER DB
-    db=QSqlDatabase::addDatabase("QPSQL");
-    db.setHostName("127.0.0.1");
+    db=QSqlDatabase::addDatabase(driver);
+    db.setHostName(host);
 
     //Create connection of SIGNALS and SLOTS
     connect(ui->add_b,SIGNAL(clicked(bool)),this,SLOT(AddData()));
     connect(ui->enter_button,SIGNAL(clicked(bool)),this,SLOT(Enter()));
     connect(ui->bGiven,SIGNAL(clicked(bool)),this,SLOT(Given()));
-connect(ui->bImaged,SIGNAL(clicked(bool)),this,SLOT(Imaged()));
+    connect(ui->bImaged,SIGNAL(clicked(bool)),this,SLOT(Imaged()));
+    connect(ui->delete_b,SIGNAL(clicked(bool)),this,SLOT(Delete_row()));
 
     //Create sqltableModel to show data from DB
     model = new QSqlTableModel(this,db);
@@ -66,13 +64,13 @@ void MainWindow::AddData()
     QString category = ui->comboBox->currentText();
 
     QSqlQuery query;
-    query.prepare("INSERT INTO request (name,ipn,description,date,category)"
+    query.prepare("INSERT INTO request (name,ipn,description,category,date)"
                   "VALUES (?,?,?,?,?)");
     query.bindValue(0,requester);
     query.bindValue(1,IPN);
     query.bindValue(2,description);
-    query.bindValue(3,date);
-    query.bindValue(4,category);
+    query.bindValue(3,category);
+    query.bindValue(4,date);
     bool qur = false;
     qur= query.exec();
     QMessageBox msgbx;
@@ -96,15 +94,18 @@ void MainWindow::AddData()
 }
 void MainWindow::Given()
 {
-
+    QString eq_count;
     QString type = ui->cb_type->currentText();
-    int eq_count = ui->le_count_eq->text().toInt() ;
+    if(ui->le_count_eq->text()=="")
+    {
+        eq_count = 1;
+    }
+    else{
+    eq_count = ui->le_count_eq->text() ;
+    }
     db.setDatabaseName("store");
     QSqlQuery query;
-    for(int i=0;i<eq_count;i++)
-    {
-    query.exec("UPDATE computers SET count = count - 1 WHERE type=" "'"+type+"'") ;
-    }
+    query.exec("UPDATE computers SET count = count - "+eq_count+"WHERE type=" "'"+type+"'") ;
     qDebug()<<query.lastError()<<query.lastQuery();
     db.setDatabaseName(ui->ipn_t->text());
     MainWindow::Refresh_store();
@@ -114,15 +115,18 @@ void MainWindow::Given()
 
 void MainWindow::Imaged()
 {
-
+    QString eq_count;
     QString type = ui->cb_type->currentText();
-    int eq_count = ui->le_count_eq->text().toInt() ;
+    if(ui->le_count_eq->text()=="")
+    {
+        eq_count = 1;
+    }
+    else{
+    eq_count = ui->le_count_eq->text();
+    }
     db.setDatabaseName("store");
     QSqlQuery query;
-    for(int i=0;i<eq_count;i++)
-    {
-    query.exec("UPDATE computers SET count = count + 1 WHERE type=" "'"+type+"'");
-    }
+    query.exec("UPDATE computers SET count = count + "+eq_count+ "WHERE type=" "'"+type+"'");
     qDebug()<<query.lastError()<<query.lastQuery();
     db.setDatabaseName(ui->ipn_t->text());
     MainWindow::Refresh_store();
@@ -134,10 +138,13 @@ void MainWindow::GetData()
         model->setTable("request");
         model->setEditStrategy(QSqlTableModel::OnManualSubmit);
         model->select();
+        ui->table_v->verticalHeader()->hide();
         ui->table_v->setModel(model);
         ui->table_v->resizeColumnsToContents();
         ui->table_v->resizeRowsToContents();
         ui->table_v->setWordWrap(true);
+
+
 }
 
 void MainWindow::Refresh_store()
@@ -148,11 +155,14 @@ void MainWindow::Refresh_store()
     model_store->setTable("computers");
     model_store->setEditStrategy(QSqlTableModel::OnManualSubmit);
     model_store->select();
+    model->removeColumn(2);
+    ui->tv_store->verticalHeader()->hide();
     ui->tv_store->setModel(model_store);
     //ui->tv_store->resizeColumnsToContents();
     ui->tv_store->resizeRowsToContents();
     ui->tv_store->setColumnWidth(1,150);
     ui->tv_store->setColumnWidth(2,150);
+    ui->tv_store->sortByColumn(0,Qt::SortOrder::AscendingOrder);
     db.setDatabaseName(ui->ipn_t->text());
 
 }
@@ -172,7 +182,7 @@ void MainWindow::Enter()
     }
     else {
 
-
+        qDebug()<<db.lastError();
        QMessageBox::critical(nullptr,"Error", "Access denied!");
     }
 
@@ -180,3 +190,19 @@ void MainWindow::Enter()
     Refresh_store();
 }
 
+
+void MainWindow::on_pushButton_clicked()
+{
+    qDebug()<<ui->tv_store->currentIndex().row();
+
+}
+
+void MainWindow::Delete_row()
+{
+    QString id = ui->table_v->currentIndex().data().toString();
+    QSqlQuery query;
+    query.exec("DELETE FROM request WHERE id = "+id+"");
+    qDebug()<<query.lastError()<<query.lastQuery();
+    MainWindow::GetData();
+
+}

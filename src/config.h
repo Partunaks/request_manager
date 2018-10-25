@@ -3,5 +3,7 @@
 #include<QFile>
 #include<QTextStream>
 #include<QDebug>
-void read_conf(QString &host,QString &driver);
+#include<QXmlStreamReader>
+#include<QSettings>
+void Settings(QString &host,QString &driver);
 #endif // CONFIG_H

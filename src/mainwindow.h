@@ -10,6 +10,8 @@
 #include<QMessageBox>
 #include<QXmlStreamReader>
 #include<QFile>
+#include<config.h>
+#include<thread>
 namespace Ui {
 class MainWindow;
 }
@@ -40,9 +42,11 @@ public slots:
     void Refresh_store();
     void Given();
     void Imaged();
+    void Delete_row();
     //void read_conf(QString host,QString driver);
 private slots:
 
+    void on_pushButton_clicked();
 };
 
 #endif // MAINWINDOW_H
